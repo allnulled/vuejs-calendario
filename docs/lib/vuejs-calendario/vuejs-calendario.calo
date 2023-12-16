@@ -1,0 +1,235 @@
+asigno window.VuejsCalendario como un componente vue2 con nombre "VuejsCalendario" con plantilla {
+  <div class="Component VuejsCalendario">
+    <div style="max-width: 200px;">
+      <div class="chivato_de_fecha">{{ obtener_fecha_formateada(fecha_seleccionada) }}</div>
+      <div class="chivato_de_fecha">a las {{ espaciar_izquierda(hora_seleccionada, 2) }}:{{ espaciar_izquierda(minuto_seleccionado, 2) }}:{{ espaciar_izquierda(segundo_seleccionado, 2) }}.{{ espaciar_izquierda(milisegundo_seleccionado, 3) }}</div>
+      <table class="tabla_de_calendario">
+        <tbody>
+          <tr>
+            <td>
+              <button class="boton_de_mover_mes" v-on:click="ir_a_mes_anterior"> ◀ </button>
+            </td>
+            <td>
+              <button class="boton_de_mover_mes" v-on:click="ir_a_mes_siguiente"> ▶ </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <table class="tabla_de_calendario">
+        <tbody>
+          <tr v-for="semana, semana_index in celdas_del_mes_actual" v-bind:key="'semana-' + semana_index">
+            <td v-for="dia, dia_index in semana" v-bind:key="'dia-' + dia_index">
+              <span v-if="dia">
+                <button class="boton_de_calendario" :class="{active: dia.getDate() === fecha_seleccionada.getDate()}" v-on:click="() => seleccionar_dia(dia)">{{ dia.getDate() }}</button>
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <table class="tabla_de_calendario" v-if="!soloFecha">
+        <tbody>
+          <tr>
+            <td>
+              <button class="boton_de_calendario" v-on:click="agregar_hora"> ▲ </button>
+            </td>
+            <td>
+              <button class="boton_de_calendario" v-on:click="agregar_minuto"> ▲ </button>
+            </td>
+            <td>
+              <button class="boton_de_calendario" v-on:click="agregar_segundo"> ▲ </button>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <table>
+                <tr>
+                  <td><input class="entrada_de_calendario" type="text" v-model="hora_seleccionada" /></td>
+                  <td>:</td>
+                </tr>
+              </table>
+            </td>
+            <td>
+              <table>
+                <tr>
+                  <td><input class="entrada_de_calendario" type="text" v-model="minuto_seleccionado" /></td>
+                  <td>:</td>
+                </tr>
+              </table>
+            </td>
+            <td>
+              <table>
+                <tr>
+                  <td><input class="entrada_de_calendario" type="text" v-model="segundo_seleccionado" /></td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <button class="boton_de_calendario" v-on:click="quitar_hora"> ▼ </button>
+            </td>
+            <td>
+              <button class="boton_de_calendario" v-on:click="quitar_minuto"> ▼ </button>
+            </td>
+            <td>
+              <button class="boton_de_calendario" v-on:click="quitar_segundo"> ▼ </button>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="100">
+              <input class="entrada_de_calendario" type="text" v-model="milisegundo_seleccionado" />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+} con lógica {
+  retorno {
+    propiedad props como {
+      propiedad soloFecha como {
+        propiedad type como Boolean.
+        propiedad default como false.
+      }.
+    }.
+    método data donde {
+      retorno {
+        fecha_seleccionada: undefined,
+        celdas_del_mes_actual: undefined,
+        hora_seleccionada: "0",
+        minuto_seleccionado: "0",
+        segundo_seleccionado: "0",
+        milisegundo_seleccionado: "0"
+      }.
+    }.
+    propiedad methods como {
+      método ir_a_mes_anterior donde {
+        creo nueva_fecha como un nuevo Date(this.fecha_seleccionada).
+        hago nueva_fecha.setMonth(nueva_fecha.getMonth() - 1).
+        asigno this.fecha_seleccionada como nueva_fecha.
+      }.
+      método ir_a_mes_siguiente donde {
+        creo nueva_fecha como un nuevo Date(this.fecha_seleccionada).
+        hago nueva_fecha.setMonth(nueva_fecha.getMonth() + 1).
+        asigno this.fecha_seleccionada como nueva_fecha.
+      }.
+      método agregar_hora donde {
+        creo variable hora como parseInt(this.hora_seleccionada).
+        incremento hora.
+        asigno this.hora_seleccionada como hora.
+      }.
+      método agregar_minuto donde {
+        creo variable minuto como parseInt(this.minuto_seleccionado).
+        incremento minuto.
+        asigno this.minuto_seleccionado como minuto.
+      }.
+      método agregar_segundo donde {
+        creo variable segundo como parseInt(this.segundo_seleccionado).
+        incremento segundo.
+        asigno this.segundo_seleccionado como segundo.
+      }.
+      método quitar_hora donde {
+        creo variable hora como parseInt(this.hora_seleccionada).
+        decremento hora.
+        asigno this.hora_seleccionada como hora.
+      }.
+      método quitar_minuto donde {
+        creo variable minuto como parseInt(this.minuto_seleccionado).
+        decremento minuto.
+        asigno this.minuto_seleccionado como minuto.
+      }.
+      método quitar_segundo donde {
+        creo variable segundo como parseInt(this.segundo_seleccionado).
+        decremento segundo.
+        asigno this.segundo_seleccionado como segundo.
+      }.
+      método seleccionar_dia con (dia) donde {
+        asigno this.fecha_seleccionada como dia.
+      }.
+      método espaciar_izquierda con (texto, longitud, relleno o en su defecto "0") donde {
+        creo variable salida como "" + texto.
+        mientras salida.length es menor que longitud {
+          asigno salida como relleno + salida.
+        }.
+        retorno salida.
+      }.
+      método obtener_fecha_formateada con (fecha) donde {
+        si fecha es tipo indefinido retorno.
+        creo variable formato como "".
+        incremento formato en un hecho donde {
+          si fecha.getDay() es igual que 0 retorno "Domingo".
+          si fecha.getDay() es igual que 1 retorno "Lunes".
+          si fecha.getDay() es igual que 2 retorno "Martes".
+          si fecha.getDay() es igual que 3 retorno "Miércoles".
+          si fecha.getDay() es igual que 4 retorno "Jueves".
+          si fecha.getDay() es igual que 5 retorno "Viernes".
+          si fecha.getDay() es igual que 6 retorno "Sábado".
+        }.
+        incremento formato en ", ".
+        incremento formato en fecha.getDate().
+        incremento formato en " de ".
+        incremento formato en un hecho donde {
+          si fecha.getMonth() es igual que 0 retorno "Enero".
+          si fecha.getMonth() es igual que 1 retorno "Febrero".
+          si fecha.getMonth() es igual que 2 retorno "Marzo".
+          si fecha.getMonth() es igual que 3 retorno "Abril".
+          si fecha.getMonth() es igual que 4 retorno "Mayo".
+          si fecha.getMonth() es igual que 5 retorno "Junio".
+          si fecha.getMonth() es igual que 6 retorno "Julio".
+          si fecha.getMonth() es igual que 7 retorno "Agosto".
+          si fecha.getMonth() es igual que 8 retorno "Septiembre".
+          si fecha.getMonth() es igual que 9 retorno "Octubre".
+          si fecha.getMonth() es igual que 10 retorno "Noviembre".
+          si fecha.getMonth() es igual que 11 retorno "Diciembre".
+        }.
+        incremento formato en " de ".
+        incremento formato en fecha.getFullYear().
+        retorno formato.
+      }.
+    }.
+    propiedad watch como {
+      método fecha_seleccionada con (nuevo_valor) donde {
+        creo dias como [].
+        creo dia_1_del_mes como un nuevo Date(nuevo_valor).
+        hago dia_1_del_mes.setDate(1).
+        hago dia_1_del_mes.setHours(0).
+        hago dia_1_del_mes.setMinutes(0).
+        hago dia_1_del_mes.setSeconds(0).
+        hago dia_1_del_mes.setMilliseconds(0).
+        creo dias_antes_de_entrar_en_el_mes como un hecho donde {
+          creo dia_de_semana como dia_1_del_mes.getDay().
+          si dia_de_semana es igual que 0 retorno 6.
+          si dia_de_semana es igual que 1 retorno 0.
+          si dia_de_semana es igual que 2 retorno 1.
+          si dia_de_semana es igual que 3 retorno 2.
+          si dia_de_semana es igual que 4 retorno 3.
+          si dia_de_semana es igual que 5 retorno 4.
+          si dia_de_semana es igual que 6 retorno 5.
+        }.
+        creo celdas_vacias_anteriores como un nuevo Array(dias_antes_de_entrar_en_el_mes).
+        creo dia_final_del_mes como un nuevo Date(nuevo_valor).
+        hago dia_final_del_mes.setMonth(dia_final_del_mes.getMonth() + 1).
+        hago dia_final_del_mes.setDate(1).
+        hago dia_final_del_mes.setDate(dia_final_del_mes.getDate() - 1).
+        creo numero_final_de_mes como dia_final_del_mes.getDate().
+        creo variable fila_actual como celdas_vacias_anteriores.
+        desde 1 hasta numero_final_de_mes + 1 {
+          creo nueva_fecha como un nuevo Date(dia_1_del_mes).
+          hago nueva_fecha.setDate(index).
+          hago fila_actual.push(nueva_fecha).
+          si nueva_fecha.getDay() es igual que 0 {
+            hago dias.push(fila_actual).
+            asigno fila_actual como [].
+          }.
+        }.
+        si fila_actual.length {
+          hago dias.push(fila_actual).
+        }.
+        asigno this.celdas_del_mes_actual como dias.
+      }.
+    }.
+    método mounted donde {
+      asigno this.fecha_seleccionada como un nuevo Date().
+    }.
+  }.
+}.
